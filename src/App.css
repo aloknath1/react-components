@@ -12,3 +12,16 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+
+button{
+  margin: 5px;
+  padding: 7px 20px;
+  border: none;
+border-radius: 5px;
+cursor: pointer;
+}
+
+.selected{
+  background-color: blue;
+  color: white;
+}

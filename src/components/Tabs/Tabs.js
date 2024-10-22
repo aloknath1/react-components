@@ -1,41 +1,61 @@
-import React from 'react';
-import { Tabs, Tab, TabPanel, TabList } from 'react-web-tabs';
-import 'react-web-tabs/dist/react-web-tabs.css';
-function TabsDemo() {
-  return (  
-      <div className="Tabs-Demo">
-         <h1>React Tabs</h1>
-            <Tabs
-        defaultTab="one"
-        onChange={(tabId) => { console.log(tabId) }}
-      >
-        <TabList>
-          <Tab tabFor="one">Tab 1</Tab>
-          <Tab tabFor="two">Tab 2</Tab>
-          <Tab tabFor="three">Tab 3</Tab>
-        </TabList>
-        <TabPanel tabId="one">
-          <p>Tab 1 content</p>
-        </TabPanel>
-        <TabPanel tabId="two">
-          <p>Tab 2 content</p>
-        </TabPanel>
-        <TabPanel tabId="three">
-          <p>Tab 3 content</p>
-        </TabPanel>
-      </Tabs>
-      </div>    
-  );
+import React, { useEffect, useState } from "react";
+
+const Tabs = (props) => {
+    const [tabsHeaders, setTabsHeaders] = useState([]);
+    const [contentMap, setContentMap] = useState([]);
+    const [active, setActive] = useState('');
+    const { children } = props;
+
+    useEffect(() => {
+        const headers = [];
+        const map = {};
+        React.Children.forEach(children, (element) => {
+            //console.log('Element : ', element);
+            if(!React.isValidElement(element)){
+                return;
+            }
+                
+            const {title} = element.props;
+            headers.push(title);
+            map[title] = element.props.children;
+
+        });
+       // console.log("headers", headers);
+        setTabsHeaders(headers);
+        setActive(headers[0]);
+        setContentMap(map);
+    },[props, children]);
+
+    const changeTab = (header) => {
+        setActive(header);
+    }
+    return (
+        <>
+            <div className="headers">
+                {
+                    tabsHeaders.map((header) => {
+                        return <button 
+                                className={active === header ? "selected" : ""}
+                                key={header}
+                                onClick={()=>changeTab(header)}>{header}</button>
+                    })
+                }
+            </div>
+            <div>
+                {
+                    Object.keys(contentMap).map((key, idx) => {
+                        if(key === active){
+                            return <div key={idx}>{contentMap[key]}</div>
+                        }else{
+                            return null;
+                        }
+                        
+                    })
+                }
+            </div>
+        </>
+    ) 
+
 }
 
-const DummyContent = () => (
-  <p style={{ padding: '18px' }}>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-    consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
-    non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-  </p>
-);
-export default TabsDemo;
+export default Tabs;

@@ -22,11 +22,11 @@ export default class Header extends Component {
   render() {
     return (  
         <header className="App-header">
-          header part
-          <Menu />
-          <button color="light" onClick={() => this.clickLogout()}>
+          <div className='header-logo'>header part</div>
+          <div className='header-menu'><Menu /></div>
+          <div className='btn'><button color="light" onClick={() => this.clickLogout()}>
               {this.state.isLoggedIn? 'Logout' : 'Login'}
-          </button>
+          </button></div>
         </header>    
     );
   }
